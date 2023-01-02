@@ -132,3 +132,8 @@ dmypy.json
 .vscode/
 # exclude the logfiles
 /logs/*.txt
+
+# exclude the data files
+data/databases
+data/transactions
+server_id

@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  # text_db:
+
+  # text_ner:
+
+  # text_sum:
+
+  graph:
+    image: "neo4j:5.3.0-community"
+    restart: unless-stopped
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./data:/data
+    environment:
+      - NEO4J_AUTH=none
+      - NEO4J_PLUGINS='["graph-data-science"]'
+  # app:
+  #   build: .
+  #   container_name: controller
+  #   restart: always
+  #   command: bash -c "uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload"
+  #   env_file:
+  #     - ./.env
+  #   volumes:
+  #     - .:/app
+  #   ports:
+  #     - "127.0.0.1:8000:8000"
+  #   depends_on:
+  #     - graph
