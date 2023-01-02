@@ -1,4 +1,7 @@
 version: "3.9"
+networks:
+  text_network:
+    driver: bridge
 services:
   text_db:
     image: svgcant2022/text-ms:text_data_db
@@ -10,8 +13,9 @@ services:
       - ./logs:/app/logs
     environment:
       - CONTAINER_NAME=Source_Text_Data_db
-    #command: 
-      #- python -m src.main.py
+      #- NETWORK=text_network
+    networks: 
+      - text_network
 
   # text_ner:
 
@@ -29,6 +33,8 @@ services:
     environment:
       - NEO4J_AUTH=none
       - NEO4J_PLUGINS=["graph-data-science"]
+    networks: 
+      - text_network
   # app:
   #   build: .
   #   container_name: controller
