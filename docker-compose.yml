@@ -1,12 +1,23 @@
 version: "3.9"
 services:
-  # text_db:
+  text_db:
+    image: svgcant2022/text-ms:text_data_db
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - CONTAINER_NAME=Source_Text_Data_db
+    #command: 
+      #- python -m src.main.py
 
   # text_ner:
 
   # text_sum:
 
-  graph:
+  neo4j-graph:
     image: "neo4j:5.3.0-community"
     restart: unless-stopped
     ports:
@@ -14,9 +25,10 @@ services:
       - "7687:7687"
     volumes:
       - ./data:/data
+      - ./logs:/logs
     environment:
       - NEO4J_AUTH=none
-      - NEO4J_PLUGINS='["graph-data-science"]'
+      - NEO4J_PLUGINS=["graph-data-science"]
   # app:
   #   build: .
   #   container_name: controller
