@@ -5,21 +5,24 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 # import ids from the text source database
 def get_pageids() -> list[str]:
     """
-    Get the pageids from the text database 
+    Get the pageids from the text database
     send a GET request to the text database to get the pageids
 
     Returns:
         list[str]: list of pageids
     """
     try:
-        available_pageids = requests.get("http://host.docker.internal:8080/get_pageids").json()
+        available_pageids = requests.get(
+            "http://host.docker.internal:8080/get_pageids").json()
         return available_pageids["pageids: "]
     except requests.exceptions.ConnectionError:
         logger.error("Could not connect to the text database")
         return []
+
 
 # get the title of a page
 def get_title(pageid: str) -> str:
@@ -34,7 +37,9 @@ def get_title(pageid: str) -> str:
         str: title of the page
     """
     try:
-        article = requests.get(f"http://host.docker.internal:8080/return_article/{pageid}").json()
+        article = requests.get(
+            f"http://host.docker.internal:8080/return_article/{pageid}").json(
+            )
         return article["title"]
     except requests.exceptions.ConnectionError:
         logger.error("Could not connect to the text database")
@@ -59,6 +64,7 @@ def get_pageids_from_graph() -> list[str]:
         logger.error("Could not connect to the graph database")
         return []
 
+
 # get the current containers on the network
 def get_containers() -> list[str]:
     """
@@ -67,4 +73,5 @@ def get_containers() -> list[str]:
     Returns:
         list[str]: list of containers
     """
-    pass
+    # need to work out how to use the docker api
+    return []

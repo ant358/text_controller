@@ -10,7 +10,7 @@ RUN pip install -r requirements-docker.txt
 # Copy the source code - see dockerignore
 COPY . /app
 # expose the port
-EXPOSE 8080
+EXPOSE 8000
 # Entrypoint
 ENTRYPOINT ["python"]
 # Run bash

@@ -4,10 +4,8 @@ import uvicorn
 import logging
 import os
 import pathlib
-import time
 from datetime import datetime
-from src.input_data import get_pageids, get_pageids_from_graph
-from src.output_data import write_document_nodes
+from src.output import update_document_nodes
 from src.control import Job_list
 
 # setup logging
@@ -61,27 +59,7 @@ create_doc_nodes = Job_list()
 create_ner_nodes = Job_list()
 
 # status
-status = "running"
-
-
-def update_document_nodes(status: str):
-    while status == 'running':
-        # get the pageids
-        graph_pageids = get_pageids_from_graph()
-        # get the pageids
-        source_db_pageids = get_pageids()
-        if pageids := [
-                pageid for pageid in source_db_pageids
-                if pageid not in graph_pageids
-        ]:
-            # output the pageids to the job list
-            create_doc_nodes.bulk_add(pageids)
-            write_document_nodes(create_doc_nodes.jobs)
-        else:
-            # log that there are no jobs
-            logger.info("No jobs to process")
-            # wait for a job to be added
-            time.sleep(10)
+status = "paused"    # paused, running, stopped
 
 
 # OUTPUT- routes
@@ -93,14 +71,14 @@ async def root():
 
 @app.get("/get_current_create_doc_nodes_jobs")
 async def get_current_create_doc_nodes_jobs():
-    """Get the current create node jobs"""
+    """Get the current create node jobs list"""
     logging.info("Current create node jobs list requested")
     return {"Current jobs": create_doc_nodes.jobs}
 
 
 @app.get("/get_current_create_ner_nodes_jobs")
 async def get_current_create_ner_nodes_jobs():
-    """Get the current create ner node jobs"""
+    """Get the current create ner node jobs list"""
     logging.info("Current create ner node jobs list requested")
     return {"Current jobs": create_ner_nodes.jobs}
 
@@ -115,13 +93,16 @@ async def get_status():
 # INPUT routes
 @app.post("/set_status/{new_status}")
 async def set_status(new_status: str):
-    """Set the status of the controller"""
+    """Set the run status of the controller to running or paused"""
     logging.info(f"Status set to {new_status}")
+    if new_status == 'running':
+        # start the document node creation process
+        update_document_nodes(new_status, create_doc_nodes)
     status = new_status
     return {"Status": status}
 
 
 if __name__ == "__main__":
-    # goto localhost:8080/
-    # or localhost:8080/docs for the interactive docs
-    uvicorn.run(app, port=8080, host="0.0.0.0")
+    # goto localhost:8000/
+    # or localhost:8000/docs for the interactive docs
+    uvicorn.run(app, port=8000, host="0.0.0.0")

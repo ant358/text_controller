@@ -8,6 +8,6 @@ client = TestClient(app)
 def test_read_main():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"message": "Template ML API to work with text data"}
+    assert response.json() == {"message": "Text controller API"}
 
 # %%
