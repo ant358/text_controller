@@ -13,19 +13,20 @@ test:
 	python -m pytest tests/*.py
 build:
 	# build the container
-	docker build -t image-name .
+	docker build -t text_controller .
 run:
 	# deploy the code
 	docker run \
-		--rm -d -p 8080:8080 \
-		--name container-name \
+		--rm -d -p 8000:8000 \
+		--name text_controller \
 		-e CONTAINER_NAME \
-		--env CONTAINER_NAME="container-name" \
+		--env CONTAINER_NAME="text_controller" \
 		--env-file .env \
-		image-name
+		text_controller
 deploy:
 	# customise to the cloud provider
 	# docker login
-	# docker tag image-name svgcant2022/text_ms:image-name
+	# docker image tag text_controller svgcant2022/text_ms:text_controller
+	# docker push svgcant2022/text_ms:text_controller
 
 all: install format lint test build run deploy

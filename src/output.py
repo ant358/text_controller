@@ -13,7 +13,7 @@ def write_document_nodes(pageids: list[str]):
     Write the document nodes to the graph database
     """
     # get the driver
-    driver = GraphDatabase.driver("bolt://localhost:7687")
+    driver = GraphDatabase.driver("bolt://host.docker.internal:7687")
     try:
         # create the session
         with driver.session() as session:

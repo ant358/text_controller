@@ -56,7 +56,7 @@ def get_pageids_from_graph() -> list[str]:
         list[str]: list of pageids
     """
     try:
-        driver = GraphDatabase.driver("bolt://localhost:7687")
+        driver = GraphDatabase.driver("bolt://host.docker.internal:7687")
         with driver.session() as session:
             result = session.run("MATCH (n:Page) RETURN n.pageId")
             return [record['n.pageId'] for record in result]

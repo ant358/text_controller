@@ -36,7 +36,7 @@ services:
     networks: 
       - text_network
   controller:
-    build: .
+    image: svgcant2022/text-ms:text_controller
     restart: always
     env_file:
       - ./.env
