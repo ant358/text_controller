@@ -1,5 +1,4 @@
 # the job list
-# %%
 import logging
 
 
@@ -61,6 +60,38 @@ class Job_list:
         """
         self.jobs.remove(job)
 
+    def bulk_add(self, jobs: list):
+        """
+        Adds a list of jobs to the list
+        Args:
+            jobs (list): The jobs to be added
+
+        Returns:
+            None
+        """
+        self.jobs.extend(jobs)
+
+    def bulk_remove(self, jobs: list):
+        """
+        Removes a list of jobs from the list
+        Args:
+            jobs (list): The jobs to be removed
+
+        Returns:
+            None
+        """
+        for job in jobs:
+            self.remove(job)
+
+    def clear(self):
+        """
+        Clears the list of jobs
+
+        Returns:
+            None
+        """
+        self.jobs = []
+
     def __len__(self):
         return len(self.jobs)
 
@@ -69,6 +100,3 @@ class Job_list:
 
     def __repr__(self):
         return str(self.jobs)
-
-
-# %%

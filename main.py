@@ -4,8 +4,10 @@ import uvicorn
 import logging
 import os
 import pathlib
+import time
 from datetime import datetime
-from src.input_data import get_wiki_page, get_random_wiki_page
+from src.input_data import get_pageids, get_pageids_from_graph
+from src.output_data import write_document_nodes
 from src.control import Job_list
 
 # setup logging
@@ -54,56 +56,69 @@ logger.info(f'Lets get started! - logginng in "{log_filename}" today')
 # create the FastAPI app
 app = FastAPI()
 
-# create the job list
-jobs = Job_list()
+# create the job lists
+create_doc_nodes = Job_list()
+create_ner_nodes = Job_list()
+
+# status
+status = "running"
+
+
+def update_document_nodes(status: str):
+    while status == 'running':
+        # get the pageids
+        graph_pageids = get_pageids_from_graph()
+        # get the pageids
+        source_db_pageids = get_pageids()
+        if pageids := [
+                pageid for pageid in source_db_pageids
+                if pageid not in graph_pageids
+        ]:
+            # output the pageids to the job list
+            create_doc_nodes.bulk_add(pageids)
+            write_document_nodes(create_doc_nodes.jobs)
+        else:
+            # log that there are no jobs
+            logger.info("No jobs to process")
+            # wait for a job to be added
+            time.sleep(10)
 
 
 # OUTPUT- routes
 @app.get("/")
 async def root():
     logging.info("Root requested")
-    return {"message": "Template ML API to work with text data"}
+    return {"message": "Text controller API"}
 
 
-@app.get("/wiki_page/{page_name}")
-async def wiki_page(page_name: str):
-    """Get the text content of a Wikipedia page"""
-    logging.info(f"Page {page_name} requested")
-    result = get_wiki_page(page_name)
-    return {"title": page_name, "content": result}
+@app.get("/get_current_create_doc_nodes_jobs")
+async def get_current_create_doc_nodes_jobs():
+    """Get the current create node jobs"""
+    logging.info("Current create node jobs list requested")
+    return {"Current jobs": create_doc_nodes.jobs}
 
 
-@app.get("/random_wiki_page")
-async def random_wiki_page():
-    """Get a random Wikipedia page summary"""
-    page_title = get_random_wiki_page()[0]
-    result = get_wiki_page(page_title)
-    logging.info(f"Random page {page_title} requested")
-    return {"title": page_title, "content": result}
+@app.get("/get_current_create_ner_nodes_jobs")
+async def get_current_create_ner_nodes_jobs():
+    """Get the current create ner node jobs"""
+    logging.info("Current create ner node jobs list requested")
+    return {"Current jobs": create_ner_nodes.jobs}
 
 
-@app.get("/get_current_jobs")
-async def get_current_jobs():
-    """Get the current jobs"""
-    logging.info("Current jobs list requested")
-    return {"Current jobs": jobs.jobs}
+@app.get("/get_status")
+async def get_status():
+    """Get the status of the controller"""
+    logging.info("Status requested")
+    return {"Status": status}
 
 
 # INPUT routes
-@app.post("/add_job/{job}")
-async def add_job(job: str):
-    """Add a job to the list of jobs"""
-    jobs.add(job)
-    logging.info(f"Job {job} added")
-    return {"message": f"Job {job} added"}
-
-
-@app.post("/remove_job/{job}")
-async def remove_job(job: str):
-    """Remove a job from the list of jobs"""
-    jobs.remove(job)
-    logging.info(f"Job {job} removed")
-    return {"message": f"Job {job} removed"}
+@app.post("/set_status/{new_status}")
+async def set_status(new_status: str):
+    """Set the status of the controller"""
+    logging.info(f"Status set to {new_status}")
+    status = new_status
+    return {"Status": status}
 
 
 if __name__ == "__main__":
