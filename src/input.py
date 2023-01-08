@@ -37,10 +37,17 @@ def get_title(pageid: str) -> str:
         str: title of the page
     """
     try:
-        article = requests.get(
-            f"http://host.docker.internal:8080/return_article/{pageid}").json(
-            )
-        return article["title"]
+        response = requests.get(
+            f"http://host.docker.internal:8080/return_article/{pageid}")
+        # check if the pageid exists    
+        if response.status_code != 200:
+            logger.error(f"Pageid {pageid} {response.status_code} error")
+            return "Title error for pageid {pageid}"
+        else:
+            article = requests.get(
+                f"http://host.docker.internal:8080/return_article/{pageid}").json(
+                )
+            return article["title"]
     except requests.exceptions.ConnectionError:
         logger.error("Could not connect to the text database")
         return ""
@@ -58,7 +65,7 @@ def get_pageids_from_graph() -> list[str]:
     try:
         driver = GraphDatabase.driver("bolt://host.docker.internal:7687")
         with driver.session() as session:
-            result = session.run("MATCH (n:Page) RETURN n.pageId")
+            result = session.run("MATCH (n:Document) RETURN n.pageId")
             return [record['n.pageId'] for record in result]
     except ServiceUnavailable:
         logger.error("Could not connect to the graph database")
