@@ -1,7 +1,6 @@
 from neo4j import GraphDatabase
 from neo4j.exceptions import ServiceUnavailable
 import logging
-import time
 from src.input import get_pageids, get_pageids_from_graph, get_title
 
 logger = logging.getLogger(__name__)
@@ -58,8 +57,11 @@ def update_document_nodes(status: str, create_doc_nodes):
             create_doc_nodes.bulk_add(pageids)
             # create the pageid nodes
             write_document_nodes(create_doc_nodes.jobs)
+            logger.info(f"Number of jobs to go: {len(create_doc_nodes.jobs)}")
+            return "running"
         else:
             # log that there are no jobs
-            logger.info("No jobs to process")
-            # wait for a job to be added
-            time.sleep(10)
+            logger.info("No jobs to process - setting status to paused")
+            # set the status to paused
+            status = "paused"
+            return "paused"

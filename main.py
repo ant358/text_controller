@@ -97,9 +97,8 @@ async def set_status(new_status: str):
     logging.info(f"Status set to {new_status}")
     if new_status == 'running':
         # start the document node creation process
-        update_document_nodes(new_status, create_doc_nodes)
-    status = new_status
-    return {"Status": status}
+        new_status = update_document_nodes(new_status, create_doc_nodes)  # type: ignore
+    return {"Status": new_status}
 
 
 if __name__ == "__main__":

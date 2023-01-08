@@ -39,7 +39,7 @@ def get_title(pageid: str) -> str:
     try:
         response = requests.get(
             f"http://host.docker.internal:8080/return_article/{pageid}")
-        # check if the pageid exists    
+        # check if the pageid exists
         if response.status_code != 200:
             logger.error(f"Pageid {pageid} {response.status_code} error")
             return "Title error for pageid {pageid}"
