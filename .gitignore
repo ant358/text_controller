@@ -137,3 +137,5 @@ dmypy.json
 data/databases
 data/transactions
 server_id
+*.db
+data/text.db

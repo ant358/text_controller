@@ -17,7 +17,23 @@ services:
     networks: 
       - text_network
 
-  # text_ner:
+  text_ner:
+    image: svgcant2022/text-ms:text_ner
+    restart: unless-stopped
+    ports:
+      - "4080:4080"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - CONTAINER_NAME=text_ner
+      #- NETWORK=text_network
+    networks: 
+      - text_network
+    depends_on:
+      - text_db
+      - neo4j-graph
+      - controller
 
   # text_sum:
 
@@ -50,3 +66,5 @@ services:
     depends_on:
       - neo4j-graph
       - text_db
+
+# use docker-compose pull && docker-compose up -d to update the images
