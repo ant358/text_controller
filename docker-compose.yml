@@ -21,7 +21,7 @@ services:
     image: svgcant2022/text-ms:text_ner
     restart: unless-stopped
     ports:
-      - "4080:4080"
+      - "7080:7080"
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
@@ -30,10 +30,7 @@ services:
       #- NETWORK=text_network
     networks: 
       - text_network
-    depends_on:
-      - text_db
-      - neo4j-graph
-      - controller
+
 
   # text_sum:
 
@@ -53,7 +50,7 @@ services:
       - text_network
   controller:
     image: svgcant2022/text-ms:text_controller
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./.env
     volumes:
@@ -66,5 +63,6 @@ services:
     depends_on:
       - neo4j-graph
       - text_db
+      - text_ner
 
 # use docker-compose pull && docker-compose up -d to update the images

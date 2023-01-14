@@ -22,6 +22,8 @@ run:
 		-e CONTAINER_NAME \
 		--env CONTAINER_NAME="text_controller" \
 		--env-file .env \
+		-v text_data_vol:/app/data \
+		-v text_data_logs:/app/logs \
 		text_controller
 deploy:
 	# customise to the cloud provider or repository
