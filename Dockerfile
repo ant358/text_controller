@@ -6,11 +6,9 @@ WORKDIR $APP_HOME
 # Copy the requirements file
 COPY requirements-docker.txt .
 # Install the Python requirements
-RUN pip install -r requirements-docker.txt
+RUN pip install --no-cache-dir -r requirements-docker.txt
 # Copy the source code - see dockerignore
 COPY . /app
-# expose the port
-EXPOSE 8000
 # Entrypoint
 ENTRYPOINT ["python"]
 # Run bash

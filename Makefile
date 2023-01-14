@@ -15,15 +15,9 @@ build:
 	# build the container
 	docker build -t text_controller .
 run:
-	# deploy the code
+	# run the container, ports and volumes in docker-compose.yml
 	docker run \
-		--rm -d -p 8000:8000 \
 		--name text_controller \
-		-e CONTAINER_NAME \
-		--env CONTAINER_NAME="text_controller" \
-		--env-file .env \
-		-v text_data_vol:/app/data \
-		-v text_data_logs:/app/logs \
 		text_controller
 deploy:
 	# customise to the cloud provider or repository
