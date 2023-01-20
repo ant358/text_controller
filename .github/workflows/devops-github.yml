@@ -31,8 +31,8 @@ jobs:
     - name: Build the container
       run: make build
 
-    - name: Run the container
-      run: make run
+    # - name: Run the container
+    #   run: make run
 
     # - name: Deploy the container
     #   run: make Deploy
