@@ -2,4 +2,6 @@
 
 # text_controller
 
+creates the doc nodes in the graph
+pulls the neo4j container 
 

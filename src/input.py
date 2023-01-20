@@ -81,4 +81,5 @@ def get_containers() -> list[str]:
         list[str]: list of containers
     """
     # need to work out how to use the docker api
+    # This is probably redundent moving to kubenertes
     return []
