@@ -56,7 +56,7 @@ app = FastAPI()
 
 # create the job lists
 create_doc_nodes = Job_list()
-create_ner_nodes = Job_list()
+
 
 # status
 status = "paused"    # paused, running, stopped
@@ -76,11 +76,11 @@ async def get_current_create_doc_nodes_jobs():
     return {"Current jobs": create_doc_nodes.jobs}
 
 
-@app.get("/get_current_create_ner_nodes_jobs")
-async def get_current_create_ner_nodes_jobs():
-    """Get the current create ner node jobs list"""
-    logging.info("Current create ner node jobs list requested")
-    return {"Current jobs": create_ner_nodes.jobs}
+# @app.get("/get_current_create_ner_nodes_jobs")
+# async def get_current_create_ner_nodes_jobs():
+#     """Get the current create ner node jobs list"""
+#     logging.info("Current create ner node jobs list requested")
+#     return {"Current jobs": create_ner_nodes.jobs}
 
 
 @app.get("/get_status")
