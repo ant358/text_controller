@@ -57,7 +57,6 @@ app = FastAPI()
 # create the job lists
 create_doc_nodes = Job_list()
 
-
 # status
 status = "paused"    # paused, running, stopped
 
@@ -97,7 +96,8 @@ async def set_status(new_status: str):
     logging.info(f"Status set to {new_status}")
     if new_status == 'running':
         # start the document node creation process
-        new_status = update_document_nodes(new_status, create_doc_nodes)  # type: ignore
+        new_status = update_document_nodes(new_status,
+                                           create_doc_nodes)    # type: ignore
     return {"Status": new_status}
 
 

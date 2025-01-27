@@ -7,6 +7,10 @@ volumes:
     external: true
   text_data_logs:
     external: true
+  text_data_plugins:
+    external: true
+  text_data_conf:
+    external: true
 services:
   neo4j-graph:
     image: "neo4j:5.3.0-community"
@@ -17,9 +21,11 @@ services:
     volumes:
       - text_data_vol:/data
       - text_data_logs:/logs
+      - text_data_plugins:/plugins
+      - text_data_conf:/conf
     environment:
       - NEO4J_AUTH=none
-      - NEO4J_PLUGINS=["graph-data-science"]
+      - NEO4J_PLUGINS='["graph-data-science", "apoc"]'
     networks: 
       - text_data
   controller:
